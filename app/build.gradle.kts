@@ -9,6 +9,10 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation("info.picocli:picocli:4.7.6")
+}
+
 plugins {
     application
     checkstyle
