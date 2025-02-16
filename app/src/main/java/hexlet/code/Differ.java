@@ -16,7 +16,7 @@ public class Differ {
         Map<String, Object> json1 = Parser.fileDataToJsonMap(data1);
         Map<String, Object> json2 = Parser.fileDataToJsonMap(data2);
 
-        TreeSet<String> allKeys = new TreeSet<String>();
+        TreeSet<String> allKeys = new TreeSet<>();
         allKeys.addAll(json1.keySet());
         allKeys.addAll(json2.keySet());
         System.out.println(json1.keySet());
@@ -44,7 +44,7 @@ public class Differ {
                 result.append("  + ").append(key).append(": ").append(json2.get(key)).append("\n");
             }
         }
-        result.append("}\n");
+        result.append("}");
 
         return result.toString();
     }
