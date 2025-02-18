@@ -1,23 +1,20 @@
 package hexlet.code;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 public class Parser {
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
+    private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
 
-    public static String loadDataFromFile(String filepath) throws Exception {
-        Path path = Paths.get(filepath).toAbsolutePath().normalize();
-        return Files.readString(path).trim();
-    }
-
-    public static Map<String, Object> fileDataToJsonMap(String content) throws Exception {
-        return MAPPER.readValue(content, new TypeReference<>() { });
+    public static Map<String, Object> getMappedFileData(String data, String fileExtension) throws Exception {
+        return switch (fileExtension) {
+            case "json" -> JSON_MAPPER.readValue(data, new TypeReference<>() { });
+            case "yaml", "yml" -> YAML_MAPPER.readValue(data, new TypeReference<>() { });
+            default -> throw new IllegalArgumentException("Unknown file extension");
+        };
     }
 }

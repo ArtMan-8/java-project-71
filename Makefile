@@ -5,7 +5,7 @@ else
 endif
 
 GRADLEW=.$(SLASH)app$(SLASH)gradlew -p .$(SLASH)app
-BIN_APP=.$(SLASH)build$(SLASH)install$(SLASH)app$(SLASH)bin$(SLASH)app
+BIN_APP=.$(SLASH)app$(SLASH)build$(SLASH)install$(SLASH)app$(SLASH)bin$(SLASH)app
 
 .PHONY: build
 
