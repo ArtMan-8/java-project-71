@@ -21,7 +21,7 @@ public class Differ {
         Map<String, Object> mappedData1 = Parser.getMappedFileData(data1, fileExtension);
         Map<String, Object> mappedData2 = Parser.getMappedFileData(data2, fileExtension);
 
-        List<Map<String, Object>> diffList = getDiffList(mappedData1, mappedData2);
+        List<Map<ChangedKey, Object>> diffList = getDiffList(mappedData1, mappedData2);
 
         return switch (format) {
             case "stylish" -> Formater.stylish(diffList);
@@ -39,8 +39,8 @@ public class Differ {
         return split[split.length - 1];
     }
 
-    private static List<Map<String, Object>> getDiffList(Map<String, Object> fileData1, Map<String, Object> fileData2) {
-        List<Map<String, Object>> diffList = new ArrayList<>();
+    private static List<Map<ChangedKey, Object>> getDiffList(Map<String, Object> fileData1, Map<String, Object> fileData2) {
+        List<Map<ChangedKey, Object>> diffList = new ArrayList<>();
 
         TreeSet<String> allKeys = new TreeSet<>();
         allKeys.addAll(fileData1.keySet());
@@ -50,28 +50,28 @@ public class Differ {
             Object value1 = fileData1.get(key);
             Object value2 = fileData2.get(key);
 
-            Map<String, Object> map = new HashMap<>();
-            map.put("key", key);
+            Map<ChangedKey, Object> map = new HashMap<>();
+            map.put(ChangedKey.KEY, key);
 
             if (fileData1.containsKey(key) && fileData2.containsKey(key)) {
                 if (Objects.equals(value1, value2)) {
-                    map.put("value", value1);
-                    map.put("status", "unchanged");
+                    map.put(ChangedKey.VALUE, value1);
+                    map.put(ChangedKey.STATUS, ChangedStatus.UNCHANGED);
                 } else {
-                    map.put("valueOld", value1);
-                    map.put("valueNew", value2);
-                    map.put("status", "changed");
+                    map.put(ChangedKey.VALUE_OLD, value1);
+                    map.put(ChangedKey.VALUE_NEW, value2);
+                    map.put(ChangedKey.STATUS, ChangedStatus.CHANGED);
                 }
             }
 
             if (fileData1.containsKey(key) && !fileData2.containsKey(key)) {
-                map.put("value", value1);
-                map.put("status", "removed");
+                map.put(ChangedKey.VALUE, value1);
+                map.put(ChangedKey.STATUS, ChangedStatus.REMOVED);
             }
 
             if (!fileData1.containsKey(key) && fileData2.containsKey(key)) {
-                map.put("value", value2);
-                map.put("status", "added");
+                map.put(ChangedKey.VALUE, value2);
+                map.put(ChangedKey.STATUS, ChangedStatus.ADDED);
             }
 
             diffList.add(map);

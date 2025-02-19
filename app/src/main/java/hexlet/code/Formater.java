@@ -4,27 +4,27 @@ import java.util.List;
 import java.util.Map;
 
 public class Formater {
-    public static String stylish(List<Map<String, Object>> diffList) {
+    public static String stylish(List<Map<ChangedKey, Object>> diffList) {
         var result = new StringBuilder();
 
         result.append("{\n");
-        for (Map<String, Object> map : diffList) {
-            String key = (String) map.get("key");
-            String status = (String) map.get("status");
-            Object value = map.get("value");
+        for (Map<ChangedKey, Object> map : diffList) {
+            String key = (String) map.get(ChangedKey.KEY);
+            ChangedStatus status = (ChangedStatus) map.get(ChangedKey.STATUS);
+            Object value = map.get(ChangedKey.VALUE);
 
             switch (status) {
-                case "unchanged":
+                case ChangedStatus.UNCHANGED:
                     result.append("    ").append(key).append(": ").append(value).append("\n");
                     break;
-                case "changed":
-                    result.append("  - ").append(key).append(": ").append(map.get("valueOld")).append("\n");
-                    result.append("  + ").append(key).append(": ").append(map.get("valueNew")).append("\n");
+                case ChangedStatus.CHANGED:
+                    result.append("  - ").append(key).append(": ").append(map.get(ChangedKey.VALUE_OLD)).append("\n");
+                    result.append("  + ").append(key).append(": ").append(map.get(ChangedKey.VALUE_NEW)).append("\n");
                     break;
-                case "removed":
+                case ChangedStatus.REMOVED:
                     result.append("  - ").append(key).append(": ").append(value).append("\n");
                     break;
-                case "added":
+                case ChangedStatus.ADDED:
                     result.append("  + ").append(key).append(": ").append(value).append("\n");
                     break;
                 default:
