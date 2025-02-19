@@ -14,7 +14,7 @@ public class Parser {
         return switch (fileExtension) {
             case "json" -> JSON_MAPPER.readValue(data, new TypeReference<>() { });
             case "yaml", "yml" -> YAML_MAPPER.readValue(data, new TypeReference<>() { });
-            default -> throw new IllegalArgumentException("Unknown file extension");
+            default -> throw new IllegalArgumentException("Unknown file extension: " + fileExtension);
         };
     }
 }
