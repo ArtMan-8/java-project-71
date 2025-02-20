@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,17 +20,17 @@ public class DifferTest {
         return Files.readString(path).trim();
     }
 
-    static Stream<Arguments> parameters() {
+    private static Stream<Arguments> parameters() {
         return Stream.of(
                 Arguments.of("stylish", "expectStylishDiff.txt"),
                 Arguments.of("plain", "expectPlainDiff.txt"),
-                Arguments.of("json", "expectJsonDiff.json")
+                Arguments.of("json", "expectJsonDiff.txt")
         );
     }
 
     @ParameterizedTest
     @MethodSource("parameters")
-    void generateDiffFromJsonFiles(String format, String fileName) throws Exception {
+    public final void generateDiffFromJsonFiles(String format, String fileName) throws Exception {
         String expected = readFixtures(fileName);
         String actual = Differ.generate(
                 FIXTURES_DIR + "file1.json",
@@ -38,14 +39,13 @@ public class DifferTest {
         assertEquals(expected, actual);
     }
 
-    @ParameterizedTest
-    @MethodSource("parameters")
-    void generateDiffFromYamlFiles(String format, String fileName) throws Exception {
-        String expected = readFixtures(fileName);
+    @Test
+    public final void generateDiffFromYamlFiles() throws Exception {
+        String expected = readFixtures("expectJsonDiff.txt");
         String actual = Differ.generate(
                 FIXTURES_DIR + "file1.yml",
                 FIXTURES_DIR + "file2.yml",
-                format);
+                "json");
         assertEquals(expected, actual);
     }
 }

@@ -7,11 +7,15 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.TreeSet;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.ArrayList;
 
 public class Differ {
+    public static String generate(String filepath1, String filepath2) throws Exception {
+        return generate(filepath1, filepath2, "stylish");
+    }
+
     public static String generate(String filepath1, String filepath2, String format) throws Exception {
         String data1 = loadDataFromFile(filepath1);
         String data2 = loadDataFromFile(filepath2);
@@ -48,7 +52,7 @@ public class Differ {
             Object value1 = fileData1.get(key);
             Object value2 = fileData2.get(key);
 
-            Map<ChangedKey, Object> map = new HashMap<>();
+            Map<ChangedKey, Object> map = new TreeMap<>();
             map.put(ChangedKey.KEY, key);
 
             if (fileData1.containsKey(key) && fileData2.containsKey(key)) {

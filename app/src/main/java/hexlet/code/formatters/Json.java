@@ -10,6 +10,6 @@ import java.util.Map;
 public class Json {
     public static String format(List<Map<ChangedKey, Object>> diffList) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(diffList).trim();
+        return mapper.writeValueAsString(diffList);
     }
 }
