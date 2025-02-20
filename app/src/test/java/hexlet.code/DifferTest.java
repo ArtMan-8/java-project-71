@@ -16,7 +16,7 @@ public class DifferTest {
     }
 
     @Test
-    void generateDiffFromJsonFiles() throws Exception {
+    void generateStylishDiffFromJsonFiles() throws Exception {
         String expected = readFixtures("expectStylishDiff.txt");
         String actual = Differ.generate(
                 FIXTURES_DIR + "file1.json",
@@ -26,12 +26,32 @@ public class DifferTest {
     }
 
     @Test
-    void generateDiffFromYamlFiles() throws Exception {
+    void generatePlainDiffFromJsonFiles() throws Exception {
+        String expected = readFixtures("expectPlainDiff.txt");
+        String actual = Differ.generate(
+                FIXTURES_DIR + "file1.json",
+                FIXTURES_DIR + "file2.json",
+                "plain");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void generateStylishDiffFromYamlFiles() throws Exception {
         String expected = readFixtures("expectStylishDiff.txt");
         String actual = Differ.generate(
                 FIXTURES_DIR + "file1.yml",
                 FIXTURES_DIR + "file2.yml",
                 "stylish");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void generatePlainDiffFromYamlFiles() throws Exception {
+        String expected = readFixtures("expectPlainDiff.txt");
+        String actual = Differ.generate(
+                FIXTURES_DIR + "file1.yml",
+                FIXTURES_DIR + "file2.yml",
+                "plain");
         assertEquals(expected, actual);
     }
 }

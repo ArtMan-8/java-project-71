@@ -23,10 +23,7 @@ public class Differ {
 
         List<Map<ChangedKey, Object>> diffList = getDiffList(mappedData1, mappedData2);
 
-        return switch (format) {
-            case "stylish" -> Formater.stylish(diffList);
-            default -> throw new IllegalArgumentException("Unknown output format: " + format);
-        };
+        return Formater.print(diffList, format);
     }
 
     private static String loadDataFromFile(String filepath) throws Exception {
@@ -39,7 +36,10 @@ public class Differ {
         return split[split.length - 1];
     }
 
-    private static List<Map<ChangedKey, Object>> getDiffList(Map<String, Object> fileData1, Map<String, Object> fileData2) {
+    private static List<Map<ChangedKey, Object>> getDiffList(
+            Map<String, Object> fileData1,
+            Map<String, Object> fileData2
+    ) {
         List<Map<ChangedKey, Object>> diffList = new ArrayList<>();
 
         TreeSet<String> allKeys = new TreeSet<>();
