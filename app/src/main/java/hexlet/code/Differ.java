@@ -13,16 +13,14 @@ import java.util.ArrayList;
 
 public class Differ {
     public static String generate(String filepath1, String filepath2, String format) throws Exception {
-        String fileExtension = getFileExtension(filepath1);
-
         String data1 = loadDataFromFile(filepath1);
         String data2 = loadDataFromFile(filepath2);
 
+        String fileExtension = getFileExtension(filepath1);
         Map<String, Object> mappedData1 = Parser.getMappedFileData(data1, fileExtension);
         Map<String, Object> mappedData2 = Parser.getMappedFileData(data2, fileExtension);
 
         List<Map<ChangedKey, Object>> diffList = getDiffList(mappedData1, mappedData2);
-
         return Formater.print(diffList, format);
     }
 

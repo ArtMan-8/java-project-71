@@ -12,7 +12,7 @@ numbers2:
   - 33
   - 44
   - 55
-id:
+id: null
 default:
   - value1
   - value2
