@@ -4,12 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.util.Objects;
-import java.util.TreeSet;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.List;
-import java.util.ArrayList;
 
 public class Differ {
     public static String generate(String filepath1, String filepath2) throws Exception {
@@ -21,10 +17,10 @@ public class Differ {
         String data2 = loadDataFromFile(filepath2);
 
         String fileExtension = getFileExtension(filepath1);
-        Map<String, Object> mappedData1 = Parser.getMappedFileData(data1, fileExtension);
-        Map<String, Object> mappedData2 = Parser.getMappedFileData(data2, fileExtension);
+        Map<String, Object> mappedData1 = Parser.getMappedData(data1, fileExtension);
+        Map<String, Object> mappedData2 = Parser.getMappedData(data2, fileExtension);
 
-        List<Map<ChangedKey, Object>> diffList = getDiffList(mappedData1, mappedData2);
+        List<Map<ChangedKey, Object>> diffList = Comparison.form(mappedData1, mappedData2);
         return Formater.print(diffList, format);
     }
 
@@ -36,49 +32,5 @@ public class Differ {
     private static String getFileExtension(String filepath) {
         String[] split = filepath.split("\\.");
         return split[split.length - 1];
-    }
-
-    private static List<Map<ChangedKey, Object>> getDiffList(
-            Map<String, Object> fileData1,
-            Map<String, Object> fileData2
-    ) {
-        List<Map<ChangedKey, Object>> diffList = new ArrayList<>();
-
-        TreeSet<String> allKeys = new TreeSet<>();
-        allKeys.addAll(fileData1.keySet());
-        allKeys.addAll(fileData2.keySet());
-
-        for (String key : allKeys) {
-            Object value1 = fileData1.get(key);
-            Object value2 = fileData2.get(key);
-
-            Map<ChangedKey, Object> map = new TreeMap<>();
-            map.put(ChangedKey.KEY, key);
-
-            if (fileData1.containsKey(key) && fileData2.containsKey(key)) {
-                if (Objects.equals(value1, value2)) {
-                    map.put(ChangedKey.VALUE, value1);
-                    map.put(ChangedKey.STATUS, ChangedStatus.UNCHANGED);
-                } else {
-                    map.put(ChangedKey.VALUE_OLD, value1);
-                    map.put(ChangedKey.VALUE_NEW, value2);
-                    map.put(ChangedKey.STATUS, ChangedStatus.CHANGED);
-                }
-            }
-
-            if (fileData1.containsKey(key) && !fileData2.containsKey(key)) {
-                map.put(ChangedKey.VALUE, value1);
-                map.put(ChangedKey.STATUS, ChangedStatus.REMOVED);
-            }
-
-            if (!fileData1.containsKey(key) && fileData2.containsKey(key)) {
-                map.put(ChangedKey.VALUE, value2);
-                map.put(ChangedKey.STATUS, ChangedStatus.ADDED);
-            }
-
-            diffList.add(map);
-        }
-
-        return diffList;
     }
 }

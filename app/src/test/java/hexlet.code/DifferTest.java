@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -20,7 +19,7 @@ public class DifferTest {
         return Files.readString(path).trim();
     }
 
-    private static Stream<Arguments> parameters() {
+    private static Stream<Arguments> diffParameters() {
         return Stream.of(
                 Arguments.of("stylish", "expectStylishDiff.txt"),
                 Arguments.of("plain", "expectPlainDiff.txt"),
@@ -29,7 +28,7 @@ public class DifferTest {
     }
 
     @ParameterizedTest
-    @MethodSource("parameters")
+    @MethodSource("diffParameters")
     public final void generateDiffFromJsonFiles(String format, String fileName) throws Exception {
         String expected = readFixtures(fileName);
         String actual = Differ.generate(
@@ -39,13 +38,33 @@ public class DifferTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    public final void generateDiffFromYamlFiles() throws Exception {
-        String expected = readFixtures("expectJsonDiff.txt");
+    @ParameterizedTest
+    @MethodSource("diffParameters")
+    public final void generateDiffFromYamlFiles(String format, String fileName) throws Exception {
+        String expected = readFixtures(fileName);
         String actual = Differ.generate(
                 FIXTURES_DIR + "file1.yml",
                 FIXTURES_DIR + "file2.yml",
-                "json");
+                format);
+        assertEquals(expected, actual);
+    }
+
+    private static Stream<Arguments> fileParameters() {
+        return Stream.of(
+                Arguments.of("file1.json", "file2.json"),
+                Arguments.of("file1.yml", "file2.yml")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("fileParameters")
+    public final void generateDefaultDiff(String file1, String file2) throws Exception {
+        String expected = readFixtures("expectStylishDiff.txt");
+
+        String actual = Differ.generate(
+                FIXTURES_DIR + file1,
+                FIXTURES_DIR + file2
+        );
         assertEquals(expected, actual);
     }
 }

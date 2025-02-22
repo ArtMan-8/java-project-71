@@ -10,11 +10,11 @@ public class Parser {
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
     private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
 
-    public static Map<String, Object> getMappedFileData(String data, String fileExtension) throws Exception {
-        return switch (fileExtension) {
+    public static Map<String, Object> getMappedData(String data, String type) throws Exception {
+        return switch (type) {
             case "json" -> JSON_MAPPER.readValue(data, new TypeReference<>() { });
             case "yaml", "yml" -> YAML_MAPPER.readValue(data, new TypeReference<>() { });
-            default -> throw new IllegalArgumentException("Unknown file extension: " + fileExtension);
+            default -> throw new IllegalArgumentException("Unknown file extension: " + type);
         };
     }
 }
