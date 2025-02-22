@@ -12,6 +12,9 @@ import picocli.CommandLine.Parameters;
         description = "Compares two configuration files(json or yaml/yml) and shows a difference.",
         mixinStandardHelpOptions = true)
 public class App implements Callable<Integer> {
+    private static final int SUCCESS_EXIT_CODE = 0;
+    private static final int ERROR_EXIT_CODE = 1;
+
     @Parameters(paramLabel = "filepath1", description = "path to first file")
     private String filepath1;
 
@@ -24,9 +27,15 @@ public class App implements Callable<Integer> {
 
     @Override
     public final Integer call() throws Exception {
-        String diff = Differ.generate(filepath1, filepath2, format);
-        System.out.println(diff);
-        return 0;
+        try {
+            String diff = Differ.generate(filepath1, filepath2, format);
+            System.out.println(diff);
+        }  catch (Exception error) {
+            System.out.println(error.getMessage());
+            return ERROR_EXIT_CODE;
+        }
+
+        return SUCCESS_EXIT_CODE;
     }
 
     public static void main(String... args) {
